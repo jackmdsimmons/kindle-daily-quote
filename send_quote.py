@@ -51,12 +51,12 @@ def send_email(api_key: str, to: str, highlight: dict):
     """
 
     resend.api_key = api_key
-    params = resend.Emails.SendParams(
-        from_="Kindle Quotes <onboarding@resend.dev>",
-        to=[to],
-        subject=subject,
-        html=html,
-    )
+    params: resend.Emails.SendParams = {
+        "from": "Kindle Quotes <onboarding@resend.dev>",
+        "to": [to],
+        "subject": subject,
+        "html": html,
+    }
     result = resend.Emails.send(params)
     print(f"Sent: {result.get('id')}  |  {book} — {text[:60]}…")
 
