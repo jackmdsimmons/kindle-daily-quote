@@ -10,9 +10,7 @@ Env vars required:
 import csv
 import os
 import random
-import urllib.request
-import urllib.error
-import json
+import resend
 
 HIGHLIGHTS_FILE = os.path.join(os.path.dirname(__file__), "kindle_highlights.csv")
 MIN_LENGTH = 40  # skip single words / very short clips
@@ -52,29 +50,15 @@ def send_email(api_key: str, to: str, highlight: dict):
     </div>
     """
 
-    payload = json.dumps({
-        "from": "Kindle Quotes <onboarding@resend.dev>",
-        "to": [to],
-        "subject": subject,
-        "html": html,
-    }).encode()
-
-    req = urllib.request.Request(
-        "https://api.resend.com/emails",
-        data=payload,
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-        },
+    resend.api_key = api_key
+    params = resend.Emails.SendParams(
+        from_="Kindle Quotes <onboarding@resend.dev>",
+        to=[to],
+        subject=subject,
+        html=html,
     )
-
-    try:
-        with urllib.request.urlopen(req) as resp:
-            result = json.loads(resp.read())
-            print(f"Sent: {result.get('id')}  |  {book} — {text[:60]}…")
-    except urllib.error.HTTPError as e:
-        body = e.read().decode()
-        raise RuntimeError(f"Resend API error {e.code}: {body}") from None
+    result = resend.Emails.send(params)
+    print(f"Sent: {result.get('id')}  |  {book} — {text[:60]}…")
 
 
 def main():
