@@ -74,8 +74,8 @@ def send_email(api_key: str, to: str, highlight: dict):
 
 
 def main():
-    api_key = os.environ.get("RESEND_API_KEY")
-    to_email = os.environ.get("TO_EMAIL")
+    api_key = os.environ.get("RESEND_API_KEY", "").strip()
+    to_email = os.environ.get("TO_EMAIL", "").strip()
 
     if not api_key or not to_email:
         raise RuntimeError("Set RESEND_API_KEY and TO_EMAIL environment variables.")
