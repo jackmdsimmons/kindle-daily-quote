@@ -68,9 +68,13 @@ def send_email(api_key: str, to: str, highlight: dict):
         },
     )
 
-    with urllib.request.urlopen(req) as resp:
-        result = json.loads(resp.read())
-        print(f"Sent: {result.get('id')}  |  {book} — {text[:60]}…")
+    try:
+        with urllib.request.urlopen(req) as resp:
+            result = json.loads(resp.read())
+            print(f"Sent: {result.get('id')}  |  {book} — {text[:60]}…")
+    except urllib.error.HTTPError as e:
+        body = e.read().decode()
+        raise RuntimeError(f"Resend API error {e.code}: {body}") from None
 
 
 def main():
