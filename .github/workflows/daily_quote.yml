@@ -2,8 +2,8 @@ name: Daily Kindle Quote
 
 on:
   schedule:
-    - cron: '0 8 * * *'   # 8:00 AM UTC every day
-  workflow_dispatch:        # also allows manual trigger from GitHub UI
+    - cron: "0 8 * * *"
+  workflow_dispatch:
 
 jobs:
   send:
